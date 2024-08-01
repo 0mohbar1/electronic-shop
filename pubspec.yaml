@@ -35,11 +35,14 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   dio:
-  flutter_bloc:
+  flutter_bloc: ^7.0.0
   shared_preferences:
   intl:
   flutter_screenutil:
   equatable:
+  google_nav_bar:
+  provider:
+  persistent_bottom_nav_bar: ^5.0.2
 dev_dependencies:
   flutter_test:
     sdk: flutter

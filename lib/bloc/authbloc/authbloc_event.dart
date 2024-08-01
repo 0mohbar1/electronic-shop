@@ -7,9 +7,13 @@ class LogInEvent extends AuthblocEvent{
 
   LogInEvent(this.email,this.password);
 }
-class SignInEvent extends AuthblocEvent{
+class SignUpEvent extends AuthblocEvent{
   String email;
+  String fullname;
+  String phone;
+  String address;
   String password;
 
-  SignInEvent(this.email,this.password);
+  SignUpEvent(
+      this.email, this.fullname, this.phone, this.address, this.password);
 }

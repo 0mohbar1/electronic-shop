@@ -12,14 +12,26 @@ part 'cartbloc_event.dart';
 part 'cartbloc_state.dart';
 
 class CartblocBloc extends Bloc<CartEvent, CartState> {
-  final StoreShoppingRepository storeShoppingRepository;
+  //final StoreShoppingRepository storeShoppingRepository;
 
-
-  CartblocBloc(this.storeShoppingRepository) : super(CartState()) {
+  CartblocBloc() : super(CartState()) {
+    on<BuyOneItem>(_onBuyOneItem);
+    on<BuyAllItem>(_onBuyAllItem);
     on<AddtoCartEvent>((event, emit) {
       final List<ApiShopping> list = List.from(state.products)
         ..add(event.product);
       emit(CartState(products: list));
     });
+  }
+
+  void _onBuyOneItem(BuyOneItem event, Emitter<CartState> emit) {
+    final List<ApiShopping> updatedList = List.from(state.products)
+      ..removeWhere((element) => element.id == event.id);
+    emit(CartState(products: updatedList));
+  }
+
+  void _onBuyAllItem(BuyAllItem event, Emitter<CartState> emit) {
+    final List<ApiShopping> updatedList = List.from(state.products)..clear();
+    emit(CartState(products: updatedList));
   }
 }

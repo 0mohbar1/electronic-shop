@@ -46,7 +46,7 @@ class AppDrawer extends StatelessWidget {
               onTap: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (_) =>  UserScreen(),
+                    builder: (_) => UserScreen(),
                   ),
                 );
               },
@@ -55,12 +55,15 @@ class AppDrawer extends StatelessWidget {
             ListTile(
               leading: const Icon(Icons.logout),
               title: const Text("Logout"),
-              onTap: (){
-                Navigator.of(context).push(MaterialPageRoute(
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
                     builder: (_) => BlocProvider(
                       create: (BuildContext context) => AuthblocBloc(),
                       child: const AuthScreen(),
-                    )));
+                    ),
+                  ),
+                );
               },
             )
           ],

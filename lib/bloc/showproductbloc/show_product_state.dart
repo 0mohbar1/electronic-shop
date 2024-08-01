@@ -1,9 +1,8 @@
 part of 'showproduct_bloc.dart';
 
 @immutable
-abstract class ShowproductState extends Equatable {
-  @override
-  List<Object> get props=>[];
+abstract class ShowproductState  {
+
 }
 
 class ShowproductInitial extends ShowproductState {}

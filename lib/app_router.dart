@@ -1,10 +1,12 @@
 import 'package:electronic_shop/bloc/authbloc/authbloc_bloc.dart';
+import 'package:electronic_shop/bloc/favoritebloc/favorite_bloc.dart';
 import 'package:electronic_shop/data/repository/shopping_repository.dart';
 import 'package:electronic_shop/data/web_services/shopping_web_services.dart';
 import 'package:electronic_shop/main.dart';
 import 'package:electronic_shop/presentation/screens/auth_screen.dart';
 import 'package:electronic_shop/presentation/screens/cart_screen.dart';
 import 'package:electronic_shop/presentation/screens/product_overview_screen.dart';
+import 'package:electronic_shop/presentation/screens/signup_screen.dart';
 import 'package:electronic_shop/presentation/screens/user_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -34,15 +36,24 @@ class AppRouter {
                   create: (BuildContext context) => AuthblocBloc(),
                   child: const AuthScreen(),
                 ));
+      case signUp_screen:
+        return MaterialPageRoute(
+            builder: (_) => BlocProvider(
+                  create: (BuildContext context) => AuthblocBloc(),
+                  child:  SignUpScreen(),
+                ));
 
       case Product_overview_screen:
         return MaterialPageRoute(
           builder: (context) => BlocProvider(
-            create: (context) => CartblocBloc(storeShoppingRepository),
+            create: (context) => CartblocBloc(),
             child: BlocProvider(
-              create: (BuildContext context) =>
-                  ShowProductBloc(storeShoppingRepository),
-              child: const ProductOverviewScreen(), //ProductDetailScreen(),));
+              create: (context) => FavoriteBloc(),
+              child: BlocProvider(
+                create: (context) => ShowProductBloc(storeShoppingRepository),
+                child:
+                    const ProductOverviewScreen(), //ProductDetailScreen(),));
+              ),
             ),
           ),
         );
@@ -59,7 +70,7 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const CartScreen());
 
       case User_screen:
-        return MaterialPageRoute(builder: (_) =>  UserScreen());
+        return MaterialPageRoute(builder: (_) => UserScreen());
     }
   }
 }

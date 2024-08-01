@@ -3,6 +3,7 @@ import 'package:electronic_shop/constants/strings.dart';
 import 'package:electronic_shop/presentation/screens/product_overview_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../bloc/authbloc/authbloc_bloc.dart';
@@ -12,13 +13,17 @@ class AuthCard extends StatefulWidget {
   State<AuthCard> createState() => _AuthCardState();
 }
 
-enum AuthMode { Login, SignUp }
+//enum AuthMode { Login, SignUp }
 
 class _AuthCardState extends State<AuthCard>
     with SingleTickerProviderStateMixin {
   final GlobalKey<FormState> _formKey = GlobalKey();
-  AuthMode _authMode = AuthMode.Login;
-  Map<String, String> authData = {'email': '', 'password': ''};
+
+  //AuthMode _authMode = AuthMode.Login;
+  Map<String, String> authData = {
+    'address': '',
+    'password': ''
+  };
   bool _isLoading = false;
   final _passwordController = TextEditingController();
   late AnimationController _controller;
@@ -64,26 +69,17 @@ class _AuthCardState extends State<AuthCard>
       _isLoading = true;
     });
     try {
-      if (_authMode == AuthMode.Login) {
-        context
-            .read<AuthblocBloc>()
-            .add(LogInEvent(authData['email']!, authData['password']!));
-      } else {
-        context
-            .read<AuthblocBloc>()
-            .add(SignInEvent(authData['email']!, authData['password']!));
-
-        }
+      context
+          .read<AuthblocBloc>()
+          .add(LogInEvent(authData['email']!, authData['password']!));
     } on DioException catch (error) {
       var errorMessage = 'Authentication failed';
       if (error.toString().contains('EMAIL_EXISTS')) {
-        errorMessage = 'This email address is already in use.';
+        errorMessage = 'هذا الايميل موجود من قبل';
       } else if (error.toString().contains('INVALID_EMAIL')) {
-        errorMessage = 'This is not a valid email address ';
-      } else if (error.toString().contains('WEAK_PASSWORD')) {
-        errorMessage = 'This password is too weak';
+        errorMessage = 'هذا الايميل ليس موجود';
       } else if (error.toString().contains('EMAIL_NOT_FOUND')) {
-        errorMessage = 'could not find a user with that email';
+        errorMessage = 'هذا الايميل ليس موجود';
       } else if (error.toString().contains('INVALID_PASSWORD')) {
         errorMessage = 'Invalid password';
       }
@@ -93,44 +89,43 @@ class _AuthCardState extends State<AuthCard>
       print('errror +$error');
       _showErrorDialog(errorMessage);
     }
-SharedPreferences prefs= await SharedPreferences.getInstance();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setBool('succes', true);
     setState(() {
       _isLoading = false;
     });
-    Navigator.of(context)
-        .pushNamed(Product_overview_screen);
+    Navigator.of(context).pushNamed(Product_overview_screen);
   }
 
   void _showErrorDialog(String message) {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('An Error Occurred'),
+        title: const Text('هناك خطأ حدث'),
         content: Text(message),
         actions: [
-          FlatButton(
-            onPressed: () => Navigator.of(ctx).pop(),
-            child: const Text('Okay!'),
+          InkWell(
+            onTap: () => Navigator.of(ctx).pop(),
+            child: const Text('اوك!'),
           )
         ],
       ),
     );
   }
 
-  void _switchAuthMode() {
-    if (_authMode == AuthMode.Login) {
-      setState(() {
-        _authMode = AuthMode.SignUp;
-      });
-      _controller.forward();
-    } else {
-      setState(() {
-        _authMode = AuthMode.Login;
-      });
-      _controller.reverse();
-    }
-  }
+  // void _switchAuthMode() {
+  //   if (_authMode == AuthMode.Login) {
+  //     setState(() {
+  //       _authMode = AuthMode.SignUp;
+  //     });
+  //     _controller.forward();
+  //   } else {
+  //     setState(() {
+  //       _authMode = AuthMode.Login;
+  //     });
+  //     _controller.reverse();
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -146,9 +141,9 @@ SharedPreferences prefs= await SharedPreferences.getInstance();
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeIn,
-          height: _authMode == AuthMode.SignUp ? 320 : 260,
+          height: 260,
           constraints: BoxConstraints(
-            minHeight: _authMode == AuthMode.SignUp ? 350 : 260,
+            minHeight: 260,
           ),
           width: deviceSize.width * 0.75,
           padding: const EdgeInsets.all(16),
@@ -159,7 +154,7 @@ SharedPreferences prefs= await SharedPreferences.getInstance();
                 children: [
                   TextFormField(
                     decoration: const InputDecoration(
-                      labelText: 'E-Mail',
+                      labelText: 'الايميل',
                     ),
                     keyboardType: TextInputType.emailAddress,
                     validator: (val) {
@@ -174,13 +169,13 @@ SharedPreferences prefs= await SharedPreferences.getInstance();
                   ),
                   TextFormField(
                     decoration: const InputDecoration(
-                      labelText: 'Password',
+                      labelText: 'كلمة المرور',
                     ),
                     obscureText: true,
                     controller: _passwordController,
                     validator: (val) {
                       if (val!.isEmpty || val.length < 5) {
-                        return 'Password is too short!';
+                        return 'كلمة المرور قصيرة جدا';
                       }
                       return null;
                     },
@@ -188,35 +183,32 @@ SharedPreferences prefs= await SharedPreferences.getInstance();
                       authData['password'] = val!;
                     },
                   ),
-                  AnimatedContainer(
-                    duration: const Duration(milliseconds: 300),
-                    constraints: BoxConstraints(
-                      minHeight: _authMode == AuthMode.SignUp ? 60 : 0,
-                      maxHeight: _authMode == AuthMode.SignUp ? 120 : 0,
-                    ),
-                    curve: Curves.easeIn,
-                    child: FadeTransition(
-                      opacity: _opacityAnimation,
-                      child: SlideTransition(
-                        position: _slideAnimation,
-                        child: TextFormField(
-                          decoration: const InputDecoration(
-                            labelText: 'Confirm Password',
-                          ),
-                          obscureText: true,
-                          enabled: _authMode == AuthMode.SignUp,
-                          validator: _authMode == AuthMode.SignUp
-                              ? (val) {
-                                  if (val != _passwordController.text) {
-                                    return 'Password do not match!';
-                                  }
-                                  return null;
-                                }
-                              : null,
-                        ),
-                      ),
-                    ),
-                  ),
+                  // AnimatedContainer(
+                  //   duration: const Duration(milliseconds: 300),
+                  //
+                  //   curve: Curves.easeIn,
+                  //   child: FadeTransition(
+                  //     opacity: _opacityAnimation,
+                  //     child: SlideTransition(
+                  //       position: _slideAnimation,
+                  //       child: TextFormField(
+                  //         decoration: const InputDecoration(
+                  //           labelText: 'Confirm Password',
+                  //         ),
+                  //         obscureText: true,
+                  //         enabled: _authMode == AuthMode.SignUp,
+                  //         validator: _authMode == AuthMode.SignUp
+                  //             ? (val) {
+                  //                 if (val != _passwordController.text) {
+                  //                   return 'Password do not match!';
+                  //                 }
+                  //                 return null;
+                  //               }
+                  //             : null,
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
                   const SizedBox(
                     height: 20,
                   ),
@@ -242,11 +234,12 @@ SharedPreferences prefs= await SharedPreferences.getInstance();
                                 .headline6!
                                 .color),
                       ),
-                      child: Text(
-                          _authMode == AuthMode.Login ? 'LOGIN' : 'SIGNUP'),
+                      child: const Text('تسجيل الدخول'),
                     ),
                   TextButton(
-                    onPressed: _switchAuthMode,
+                    onPressed: () {
+                      Navigator.of(context).pushNamed(signUp_screen);
+                    },
                     style: ButtonStyle(
                       foregroundColor: MaterialStateProperty.all(
                           Theme.of(context).primaryColor),
@@ -254,8 +247,8 @@ SharedPreferences prefs= await SharedPreferences.getInstance();
                           const EdgeInsets.symmetric(
                               horizontal: 30, vertical: 8)),
                     ),
-                    child: Text(
-                      '${_authMode == AuthMode.Login ? 'SIGNUP' : 'LOGIN'} INSTEAD',
+                    child: const Text(
+                      'انشاء حساب',
                     ),
                   )
                 ],

@@ -6,6 +6,7 @@ class ApiShopping {
   String? category;
   String? image;
   Rating? rating;
+  bool? isFavorite;
 
   ApiShopping(
       {this.id,
@@ -14,7 +15,8 @@ class ApiShopping {
         this.description,
         this.category,
         this.image,
-        this.rating});
+        this.rating,
+        this.isFavorite=false});
 
   ApiShopping.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -25,8 +27,9 @@ class ApiShopping {
     image = json['image'];
     rating =
     json['rating'] != null ? new Rating.fromJson(json['rating']) : null;
-  }
+    isFavorite = json['isFavorite'] ?? false;
 
+  }
 }
 
 class Rating {

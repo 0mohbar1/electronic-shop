@@ -14,8 +14,7 @@ class AuthblocBloc extends Bloc<AuthblocEvent, AuthblocState> {
         try {
           emit(LogInLoadingState());
 
-
-          await saveCredentialsToSharedPrefs(event.email, event.password);
+          await saveLogInInfo(event.email, event.password);
           emit(LogInLoadedState());
         } catch (e) {
           emit(LogInFailState(message: 'An error occurred: $e'));
@@ -23,12 +22,13 @@ class AuthblocBloc extends Bloc<AuthblocEvent, AuthblocState> {
       }
     });
 
-    on<SignInEvent>((event, emit) async {
-      if (event is SignInEvent) {
+    on<SignUpEvent>((event, emit) async {
+      if (event is SignUpEvent) {
         try {
           emit(SignInLoadingState());
 
-          await saveCredentialsToSharedPrefs(event.email, event.password);
+          await saveSignUpInfo(event.fullname, event.email, event.phone,
+              event.address, event.password);
 
           emit(SignInLoadedState());
         } catch (e) {
@@ -38,13 +38,19 @@ class AuthblocBloc extends Bloc<AuthblocEvent, AuthblocState> {
     });
   }
 
+  Future<void> saveSignUpInfo(String fullname, String email, String phone,
+      String address, String password) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('email', email);
+    await prefs.setString('fullName', fullname);
+    await prefs.setString('phone', phone);
+    await prefs.setString('address', address);
+    await prefs.setString('password', password);
+  }
 
-  Future<void> saveCredentialsToSharedPrefs(
-      String email, String password) async {
+  Future<void> saveLogInInfo(String email, String password) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('email', email);
     await prefs.setString('password', password);
-    String _email=await prefs.setString('email', email).toString();
-
   }
 }
