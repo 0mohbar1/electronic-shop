@@ -43,22 +43,20 @@ class StoreShopping extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(textDirection: TextDirection.rtl,
-      child: MultiProvider(
-        providers: [ChangeNotifierProvider(create: (_) => ThemeProvider()),
-        ChangeNotifierProvider(create: (_)=>FavoriteProvider())
-        ],
-        child: Consumer<ThemeProvider>(builder: (context, themeProvider, child) {
-          return MaterialApp(
-            initialRoute: preferences.getBool('sccess') ?? false
-                ? Product_overview_screen
-                : auth_screen,
-            debugShowCheckedModeBanner: false,
-            theme: ThemeData(colorScheme: themeProvider.theme),
-            onGenerateRoute: appRouter.generateRoute,
-          );
-        }),
-      ),
+    return MultiProvider(
+      providers: [ChangeNotifierProvider(create: (_) => ThemeProvider()),
+      ChangeNotifierProvider(create: (_)=>FavoriteProvider())
+      ],
+      child: Consumer<ThemeProvider>(builder: (context, themeProvider, child) {
+        return MaterialApp(
+          initialRoute: preferences.getBool('sccess') ?? false
+              ? Product_overview_screen
+              : auth_screen,
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(colorScheme: themeProvider.theme),
+          onGenerateRoute: appRouter.generateRoute,
+        );
+      }),
     );
   }
 }

@@ -12,13 +12,13 @@ part 'favorite_state.dart';
 class FavoriteBloc extends Bloc<FavoriteEvent, FavoriteState> {
   FavoriteBloc() : super(FavoriteState()) {
     on<AddtoFavoriteEvent>((event, emit) {
-      final List<ApiShopping> list = List.from(state.products)
+      final List<Product> list = List.from(state.products)
         ..add(event.product);
       emit(FavoriteState(products: list));
     });
 
     on<RemoveFromFavoriteEvent>((event, emit) {
-      final List<ApiShopping> list = List.from(state.products)
+      final List<Product> list = List.from(state.products)
         ..removeWhere((product) => product.id == event.id);
       emit(FavoriteState(products: list));
     });

@@ -9,19 +9,70 @@ class CartScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        backgroundColor: ThemeProvider.primColor,
-        title: const Text(
-          "منتجاتي",
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        ),
-        leading: Container(),
-      ),
-      body: BlocBuilder<CartblocBloc, CartState>(
-        builder: (context, state) {
-          return GridView.builder(
+    return BlocBuilder<CartblocBloc, CartState>(
+      builder: (context, state) {
+        return Scaffold(
+          backgroundColor: Theme.of(context).colorScheme.background,
+          appBar: AppBar(
+            actions: [
+              TextButton(
+                  onPressed: () {
+
+                    showDialog(
+                        context: context,
+                        builder: (_) {
+                          return AlertDialog(
+                            title: Text(
+                              'هل تود شراء جميع المنتجات ',
+                              style: TextStyle(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onSecondary),
+                            ),
+                            content: Text(
+                              '\$${state.totalPrice}: السعر ',
+                              style: TextStyle(
+                                fontSize: 20,
+                                color:
+                                    Theme.of(context).colorScheme.onSecondary,
+                              ),
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text('لا'),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  BlocProvider.of<CartblocBloc>(context)
+                                      .add(BuyAllItem());
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text('نعم'),
+                              ),
+                            ],
+                          );
+                        });
+                  },
+                  child: Text(
+                    'شراء الكل',
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.background),
+                  ))
+            ],
+            centerTitle: true,
+            backgroundColor: ThemeProvider.primColor,
+            title: Text(
+              "منتجاتي",
+              style: TextStyle(
+                  color: Theme.of(context).colorScheme.background,
+                  fontWeight: FontWeight.bold),
+            ),
+            leading: Container(),
+          ),
+          body: GridView.builder(
             gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
               maxCrossAxisExtent: 200,
               childAspectRatio: 0.50,
@@ -51,20 +102,37 @@ class CartScreen extends StatelessWidget {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(8),
                               image: DecorationImage(
-                                image: NetworkImage(product.image!),
+                                image: NetworkImage(
+                                    'http://192.168.92.77/TechShop/public/${product.product.image!}'),
                                 fit: BoxFit.cover,
                               ),
                             ),
                           ),
                           const SizedBox(height: 10),
                           // Product title
-                          Text(
-                            product.title!,
-                            maxLines: 2,
-                            style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Theme.of(context).colorScheme.onPrimary),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                product.product.name!,
+                                maxLines: 2,
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onPrimary),
+                              ),
+                              Text(
+                                '${state.products[index].quantity.toString()}x',
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onPrimary),
+                              ),
+                            ],
                           ),
                           const SizedBox(height: 5),
                           // Product price
@@ -72,39 +140,57 @@ class CartScreen extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               Text(
-                                '\$${product.price.toString()}',
+                                '\$${product.product.price.toString()}',
                                 style: TextStyle(
                                   fontSize: 16,
                                   color:
                                       Theme.of(context).colorScheme.onPrimary,
                                   fontWeight: FontWeight.bold,
                                 ),
-                              ),                              IconButton(
+                              ),
+                              IconButton(
                                   onPressed: () {
+                                    print(state.totalPrice);
                                     showDialog(
                                       context: context,
                                       builder: (_) {
+                                        double dis = (product.product.price! *
+                                                product.quantity) *
+                                            (product.product.discount! / 100);
                                         return AlertDialog(
-                                          title: const Text(
-                                              'هل انت متاكد من شراء المنتج'),
+                                          title: Text(
+                                            'هل انت متاكد من شراء المنتج',
+                                            style: TextStyle(
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .onSecondary),
+                                          ),
+                                          content: Text(
+                                            '\$${(product.product.price! * product.quantity) - dis}: السعر ',
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .onSecondary,
+                                            ),
+                                          ),
                                           actions: [
                                             TextButton(
                                               onPressed: () {
-                                                Navigator.of(context)
-                                                    .pop();
+                                                Navigator.of(context).pop();
                                               },
                                               child: const Text('لا'),
                                             ),
                                             TextButton(
                                               onPressed: () {
-                                                print('Dispatching BuyOneItem event for product id: ${product.id}');
+                                                print(
+                                                    'Dispatching BuyOneItem event for product id: ${product.product.id}');
 
                                                 BlocProvider.of<CartblocBloc>(
-                                                    context)
-                                                    .add(BuyOneItem(product
-                                                    .id));
-                                                Navigator.of(context)
-                                                    .pop();
+                                                        context)
+                                                    .add(BuyOneItem(
+                                                        product.product.id));
+                                                Navigator.of(context).pop();
                                               },
                                               child: const Text('نعم'),
                                             ),
@@ -116,9 +202,8 @@ class CartScreen extends StatelessWidget {
                                   icon: Icon(
                                     Icons.shopping_cart_outlined,
                                     color:
-                                    Theme.of(context).colorScheme.onPrimary,
+                                        Theme.of(context).colorScheme.onPrimary,
                                   ))
-
                             ],
                           ),
 
@@ -130,11 +215,10 @@ class CartScreen extends StatelessWidget {
                 ),
               );
             },
-          );
-        },
-      ),
-      // drawer: const AppDrawer(),
+          ),
+          // drawer: const AppDrawer(),
+        );
+      },
     );
   }
 }
-

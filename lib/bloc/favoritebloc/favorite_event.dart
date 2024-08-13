@@ -3,7 +3,7 @@ part of 'favorite_bloc.dart';
 @immutable
 abstract class FavoriteEvent {}
 class AddtoFavoriteEvent extends FavoriteEvent{
-  ApiShopping product;
+  Product product;
   AddtoFavoriteEvent({required this.product});
 }
 class RemoveFromFavoriteEvent extends FavoriteEvent{

@@ -31,38 +31,16 @@ class AuthScreen extends StatelessWidget {
             SingleChildScrollView(
               child: Container(
                 height: deviceSize.height,
-                width: deviceSize.width,
+              width: deviceSize.width,
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                 // mainAxisAlignment: MainAxisAlignment.center,
+                //  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
+                    const SizedBox(height: 100,),
                     Flexible(
-                      child: Container(
-                        margin: const EdgeInsets.only(bottom: 20),
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 8, horizontal: 90),
-                        transform: Matrix4.rotationZ(-8 * pi / 180)
-                          ..translate(-10.0),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: Colors.pink,
-                          boxShadow: const [
-                            BoxShadow(
-                              blurRadius: 8,
-                              color: Colors.black26,
-                              offset: Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: const Text(
-                          'MyShop',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 50,
-                              fontFamily: 'Anton'),
-                        ),
-                      ),
+                      child: Image.asset('images/Whats.png',height: 220,)
                     ),
+                    const SizedBox(height: 20,),
                     Flexible(
                       flex: deviceSize.width > 600 ? 2 : 1,
                       child: AuthCard(),

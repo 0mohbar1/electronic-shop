@@ -1,52 +1,78 @@
 class ApiShopping {
-  int? id;
-  String? title;
-  double? price;
-  String? description;
-  String? category;
-  String? image;
-  Rating? rating;
-  bool? isFavorite;
+  List<Product>? product;
 
-  ApiShopping(
-      {this.id,
-        this.title,
-        this.price,
-        this.description,
-        this.category,
-        this.image,
-        this.rating,
-        this.isFavorite=false});
+  ApiShopping({this.product});
 
   ApiShopping.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    title = json['title'];
-    price = json['price']?.toDouble();
-    description = json['description'];
-    category = json['category'];
-    image = json['image'];
-    rating =
-    json['rating'] != null ? new Rating.fromJson(json['rating']) : null;
-    isFavorite = json['isFavorite'] ?? false;
-
-  }
-}
-
-class Rating {
-  double? rate;
-  int? count;
-
-  Rating({this.rate, this.count});
-
-  Rating.fromJson(Map<String, dynamic> json) {
-    rate = json['rate'].toDouble();
-    count = json['count'];
+    if (json['product'] != null) {
+      product = <Product>[];
+      json['product'].forEach((v) {
+        product!.add(new Product.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['rate'] = this.rate;
-    data['count'] = this.count;
+    if (this.product != null) {
+      data['product'] = this.product!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class Product {
+  int? id;
+  String? name;
+  String? image;
+  String? desc;
+  int? price;
+  String? color;
+  int? discount;
+  int? departmentId;
+  String? createdAt;
+  String? updatedAt;
+bool? isFavorite;
+  Product(
+      {this.id,
+        this.name,
+        this.image,
+        this.desc,
+        this.price,
+        this.color,
+        this.discount,
+        this.departmentId,
+        this.createdAt,
+        this.updatedAt,
+  this.isFavorite=false});
+
+  Product.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+    image = json['image'];
+    desc = json['desc'];
+    price = json['price'];
+    color = json['color'];
+    discount = json['discount'];
+    departmentId = json['department_id'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+  isFavorite = json['isFavorite'] ?? false;
+
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['name'] = this.name;
+    data['image'] = this.image;
+    data['desc'] = this.desc;
+    data['price'] = this.price;
+    data['color'] = this.color;
+    data['discount'] = this.discount;
+    data['department_id'] = this.departmentId;
+    data['created_at'] = this.createdAt;
+    data['updated_at'] = this.updatedAt;
     return data;
   }
 }

@@ -25,8 +25,8 @@ class ProductOverviewScreen extends StatefulWidget {
 }
 
 class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
-  late List<ApiShopping>? allproduct;
-  late List<ApiShopping>? searchForProduct;
+  late List<Product>? allproduct;
+  late List<Product>? searchForProduct;
   bool _isSearching = false;
   final _searchTextController = TextEditingController();
 
@@ -44,22 +44,24 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
     return TextField(
         controller: _searchTextController,
         cursorColor: Theme.of(context).primaryColor,
-        decoration: const InputDecoration(
+        decoration:  InputDecoration(
           hintText: 'ابحث عن المنتج',
           border: InputBorder.none,
-          hintStyle: TextStyle(fontSize: 18, color: Colors.white),
+          hintStyle: TextStyle(fontSize: 18, color: Theme.of(context).colorScheme.background),
         ),
-        style: const TextStyle(fontSize: 18, color: Colors.white),
+        style:  TextStyle(fontSize: 18, color: Theme.of(context).colorScheme.background),
         onChanged: (searchForProduct) {
           addSearchedFOrItemsToSearchedList(searchForProduct);
         });
   }
 
   void addSearchedFOrItemsToSearchedList(String searchedProduct) {
+    print(searchedProduct);
     searchForProduct = allproduct
-        ?.where((product) =>
-            product.title!.toLowerCase().startsWith(searchedProduct))
+        ?.where(
+            (product) => product.name!.toLowerCase().contains(searchedProduct))
         .toList();
+
     setState(() {});
   }
 
@@ -71,16 +73,16 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
             _clearSearch();
             Navigator.pop(context);
           },
-          icon: Icon(Icons.clear, color: Theme.of(context).primaryColor),
+          icon: Icon(Icons.clear, color: Theme.of(context).colorScheme.background),
         ),
       ];
     } else {
       return [
         IconButton(
           onPressed: _startSearch,
-          icon: const Icon(
+          icon: Icon(
             Icons.search,
-            color: Colors.white,
+            color: Theme.of(context).colorScheme.background,
           ),
         ),
       ];
@@ -111,52 +113,74 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
   }
 
   Widget _buildAppBarTitle() {
-    return const Text(
+    return Text(
       'المتجر التقني',
-      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+      style: TextStyle(
+          color: Theme.of(context).colorScheme.background,
+          fontWeight: FontWeight.bold),
     );
   }
 
   Widget buildProductList() {
-    return Scaffold(
-      backgroundColor:  Theme.of(context).colorScheme.onPrimary,
-      appBar: AppBar(
-        centerTitle: true,
-        backgroundColor: ThemeProvider.primColor,
-        leading: _isSearching
-            ? const BackButton(
-                color: Colors.white,
-              )
-            : Container(),
-        title: _isSearching ? _buildSearchField() : _buildAppBarTitle(),
-        actions: _buildAppBarActions(),
-      ),
-      body: GridView.builder(
-        shrinkWrap: true,
-        physics: const ClampingScrollPhysics(),
-        padding: EdgeInsets.zero,
-        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-          maxCrossAxisExtent: 200, // Number of columns in the grid
-          childAspectRatio: 0.50,
-          //  mainAxisSpacing: 8.0, // Vertical spacing between items
-          crossAxisSpacing: 8.0, // Horizontal spacing between items
-        ),
-        itemCount: _searchTextController.text.isEmpty
-            ? allproduct?.length
-            : searchForProduct?.length,
-        itemBuilder: (ctx, index) {
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ProductItemWidget(
-              index: index,
-              product: _searchTextController.text.isEmpty
-                  ? allproduct![index]
-                  : searchForProduct![index],
+    final list = ['لابتوب', 'ماوس', 'كيبورد','فلاش','شاحن'];
+    return DefaultTabController(
+        length: 5,
+        child: Scaffold(
+          appBar: AppBar(
+            bottom: TabBar(
+              labelColor: Theme.of(context).colorScheme.background,
+              onTap: (value) {
+                _searchTextController.text = ' ';
+                addSearchedFOrItemsToSearchedList(list[value]);
+              },
+              isScrollable: true,
+              tabs: const [
+                Tab(
+                  text: 'لابتوب',
+                  height: 20,
+                ),
+                Tab(text: 'ماوس'),
+                Tab(text: 'كيبورد'),
+                Tab(text: 'فلاش'),
+                Tab(text: 'شاحن'),
+              ],
             ),
-          );
-        },
-      ),
-    );
+            centerTitle: true,
+            backgroundColor: ThemeProvider.primColor,
+            leading: _isSearching
+                ? const BackButton(
+                    color: Colors.white,
+                  )
+                : Container(),
+            title: _isSearching ? _buildSearchField() : _buildAppBarTitle(),
+            actions: _buildAppBarActions(),
+          ),
+          body: GridView.builder(
+            shrinkWrap: true,
+            physics: const ClampingScrollPhysics(),
+            padding: EdgeInsets.zero,
+            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: 200, // Number of columns in the grid
+              childAspectRatio: 0.50,
+              //  mainAxisSpacing: 8.0, // Vertical spacing between items
+              crossAxisSpacing: 8.0, // Horizontal spacing between items
+            ),
+            itemCount: _searchTextController.text.isEmpty
+                ? allproduct?.length
+                : searchForProduct?.length,
+            itemBuilder: (ctx, index) {
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ProductItemWidget(
+                  index: index,
+                  product: _searchTextController.text.isEmpty
+                      ? allproduct![index]
+                      : searchForProduct![index],
+                ),
+              );
+            },
+          ),
+        ));
   }
 
   int _selectedPage = 0;
@@ -167,10 +191,10 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
     });
   }
 
-  List<GButton> tabs = [
+  List<GButton> tabs = const [
     GButton(
       icon: Icons.shopping_bag_outlined,
-      text: 'Shop',
+      text: 'الرئيسية',
       textStyle: TextStyle(
         fontSize: 12,
         color: Colors.white,
@@ -178,7 +202,7 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
     ),
     GButton(
       icon: Icons.shopping_cart,
-      text: 'Shop',
+      text: 'الكارت',
       textStyle: TextStyle(
         fontSize: 12,
         color: Colors.white,
@@ -186,7 +210,7 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
     ),
     GButton(
       icon: Icons.assignment_ind,
-      text: 'My Info',
+      text: 'معلوماتي',
       textStyle: TextStyle(
         fontSize: 12,
         color: Colors.white,
@@ -194,8 +218,7 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
     ),
     GButton(
       icon: Icons.favorite,
-      text: 'Settings',
-      iconColor: Colors.white,
+      text: 'المفضلة',
       textStyle: TextStyle(
         fontSize: 12,
         color: Colors.white,
@@ -205,6 +228,8 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<ThemeProvider>(context);
+
     final List<Widget> _widgetOptions = <Widget>[
       BlocBuilder<ShowProductBloc, ShowproductState>(
         builder: (context, state) {
@@ -235,7 +260,7 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
       ),
     ];
     return Scaffold(
-      //  backgroundColor: Colors.black,
+      backgroundColor: provider.isDark ? Colors.grey[900] : Colors.white,
 
       body: _widgetOptions.elementAt(_selectedPage),
       // drawer: const AppDrawer(),
@@ -275,7 +300,7 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
             tabBackgroundColor: ThemeProvider.primColor,
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             activeColor: Colors.white,
-            backgroundColor: Theme.of(context).colorScheme.onPrimary,
+            backgroundColor: Theme.of(context).colorScheme.background,
             gap: 8,
             tabs: tabs,
           ),

@@ -11,7 +11,7 @@ import '../../bloc/cartbloc/cartbloc_bloc.dart';
 import '../../data/models/apishopping.dart';
 
 class ProductItemWidget extends StatefulWidget {
-  final ApiShopping product;
+  final Product product;
   final int index;
 
   ProductItemWidget({Key? key, required this.product, required this.index})
@@ -51,7 +51,7 @@ class _ProductItemWidgetState extends State<ProductItemWidget> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(8),
                       image: DecorationImage(
-                        image: NetworkImage(widget.product.image!),
+                        image: NetworkImage('http://192.168.92.77/TechShop/public/${widget.product.image!}'),
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -59,19 +59,18 @@ class _ProductItemWidgetState extends State<ProductItemWidget> {
                   const SizedBox(height: 10),
                   // Product title
                   Text(
-                    widget.product.title!,
+                    widget.product.name!,
                     maxLines: 2,
-                    style:  TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.onPrimary
-                    ),
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).colorScheme.onPrimary),
                   ),
                   const SizedBox(height: 5),
                   // Product price
                   Text(
                     '\$${widget.product.price.toString()}',
-                    style:  TextStyle(
+                    style: TextStyle(
                       fontSize: 16,
                       color: Theme.of(context).colorScheme.onPrimary,
                       fontWeight: FontWeight.bold,
@@ -86,8 +85,13 @@ class _ProductItemWidgetState extends State<ProductItemWidget> {
                     children: [
                       IconButton(
                         onPressed: () => BlocProvider.of<CartblocBloc>(context)
-                            .add(AddtoCartEvent(product: widget.product)),
-                        icon:  Icon(Icons.shopping_cart,color: Theme.of(context).colorScheme.onPrimary,),
+                            .add(AddtoCartEvent(
+                                product: widget.product,
+                                totalPrice: widget.product.price!.toDouble())),
+                        icon: Icon(
+                          Icons.shopping_cart,
+                          color: Theme.of(context).colorScheme.onPrimary,
+                        ),
                       ),
                       IconButton(
                         onPressed: () {
@@ -111,8 +115,14 @@ class _ProductItemWidgetState extends State<ProductItemWidget> {
                                       index: widget.index, isFav: false));
                         },
                         icon: widget.product.isFavorite!
-                            ? Icon(Icons.favorite,color: Theme.of(context).colorScheme.onPrimary,)
-                            : Icon(Icons.favorite_border,color: Theme.of(context).colorScheme.onPrimary,),
+                            ? Icon(
+                                Icons.favorite,
+                                color: Theme.of(context).colorScheme.onPrimary,
+                              )
+                            : Icon(
+                                Icons.favorite_border,
+                                color: Theme.of(context).colorScheme.onPrimary,
+                              ),
                       ),
                     ],
                   ),

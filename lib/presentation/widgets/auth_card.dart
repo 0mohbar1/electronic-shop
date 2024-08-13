@@ -134,6 +134,7 @@ class _AuthCardState extends State<AuthCard>
     return BlocProvider<AuthblocBloc>(
       create: (BuildContext context) => AuthblocBloc(),
       child: Card(
+
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
@@ -141,7 +142,7 @@ class _AuthCardState extends State<AuthCard>
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeIn,
-          height: 260,
+          height: 330,
           constraints: BoxConstraints(
             minHeight: 260,
           ),
@@ -159,7 +160,7 @@ class _AuthCardState extends State<AuthCard>
                     keyboardType: TextInputType.emailAddress,
                     validator: (val) {
                       if (val!.isEmpty || !val.contains('@')) {
-                        return 'Invalid email';
+                        return 'هذا الايميل غير صحيح';
                       }
                       return null;
                     },
@@ -238,7 +239,7 @@ class _AuthCardState extends State<AuthCard>
                     ),
                   TextButton(
                     onPressed: () {
-                      Navigator.of(context).pushNamed(signUp_screen);
+                      Navigator.of(context).pushReplacementNamed(signUp_screen);
                     },
                     style: ButtonStyle(
                       foregroundColor: MaterialStateProperty.all(
@@ -250,7 +251,22 @@ class _AuthCardState extends State<AuthCard>
                     child: const Text(
                       'انشاء حساب',
                     ),
-                  )
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pushReplacementNamed(signUp_screen);
+                    },
+                    style: ButtonStyle(
+                      foregroundColor: MaterialStateProperty.all(
+                          Theme.of(context).primaryColor),
+                      padding: MaterialStateProperty.all(
+                          const EdgeInsets.symmetric(
+                              horizontal: 30, vertical: 8)),
+                    ),
+                    child: const Text(
+                      'نسيت كلمة المرور؟',
+                    ),
+                  ),
                 ],
               ),
             ),

@@ -4,8 +4,9 @@ part of 'cartbloc_bloc.dart';
 @immutable
 abstract class CartEvent extends Equatable{}
 class AddtoCartEvent extends CartEvent{
-  ApiShopping product;
-  AddtoCartEvent({required this.product});
+  Product product;
+  double totalPrice=0;
+  AddtoCartEvent({required this.product,required this.totalPrice});
 
   @override
   List<Object?> get props => [product];

@@ -1,7 +1,7 @@
 part of 'favorite_bloc.dart';
 
 class FavoriteState extends Equatable {
-  List<ApiShopping> products;
+  List<Product> products;
 
   FavoriteState({this.products = const [], });
 

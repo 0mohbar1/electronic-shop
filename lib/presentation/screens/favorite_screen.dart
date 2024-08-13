@@ -10,11 +10,12 @@ class FavoriteScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: ThemeProvider.primColor,
-        title: const Text("المفضلة",
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        title:  Text("المفضلة",
+            style: TextStyle(color: Theme.of(context).colorScheme.background, fontWeight: FontWeight.bold)),
         leading: Container(),
       ),
       body: BlocBuilder<FavoriteBloc, FavoriteState>(
@@ -48,7 +49,7 @@ class FavoriteScreen extends StatelessWidget {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(8),
                               image: DecorationImage(
-                                image: NetworkImage(product.image!),
+                                image: NetworkImage('http://192.168.92.77/TechShop/public/${product.image!}'),
                                 fit: BoxFit.cover,
                               ),
                             ),
@@ -56,7 +57,7 @@ class FavoriteScreen extends StatelessWidget {
                           const SizedBox(height: 10),
                           // Product title
                           Text(
-                            product.title!,
+                            product.name!,
                             maxLines: 2,
                             style:  TextStyle(
                                 fontSize: 18,
@@ -78,7 +79,7 @@ class FavoriteScreen extends StatelessWidget {
                               ),
                               IconButton(
                                 onPressed: () => BlocProvider.of<CartblocBloc>(context)
-                                    .add(AddtoCartEvent(product: product)),
+                                    .add(AddtoCartEvent(product: product,totalPrice: product.price!.toDouble())),
                                 icon:  Icon(Icons.shopping_cart,color: Theme.of(context).colorScheme.onPrimary,),
                               ),
                             ],

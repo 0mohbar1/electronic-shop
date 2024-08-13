@@ -8,7 +8,7 @@ abstract class ShowproductState  {
 class ShowproductInitial extends ShowproductState {}
 class LoagingAllItem extends ShowproductState{}
 class AllItemsLoaded extends ShowproductState{
-  final List<ApiShopping> AllItem;
+  final List<Product> AllItem;
 
   AllItemsLoaded(this.AllItem);
   @override
@@ -22,6 +22,6 @@ class FailedToLoadItems extends ShowproductState{
   List<Object> get props=>[message];
 }
 class CartState extends ShowproductState{
-  List<ApiShopping> products;
+  List<Product> products;
   CartState({required this.products});
 }

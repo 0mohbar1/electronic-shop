@@ -58,7 +58,7 @@ class AppRouter {
           ),
         );
       case Product_detail_screen:
-        final ApiShopping product = settings.arguments as ApiShopping;
+        final Product product = settings.arguments as Product;
 
         return MaterialPageRoute(
             builder: (_) => BlocProvider(

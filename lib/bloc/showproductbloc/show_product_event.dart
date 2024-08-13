@@ -4,7 +4,7 @@ part of 'showproduct_bloc.dart';
 abstract class ShowProductEvent {}
 class GetAllItem extends ShowProductEvent{}
 class AddProductEvent extends ShowProductEvent{
-   ApiShopping product;
+  Product product;
    AddProductEvent({required this.product});
 }
 class ShowIconFavorite extends ShowProductEvent{

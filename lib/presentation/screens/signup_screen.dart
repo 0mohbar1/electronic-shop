@@ -4,6 +4,7 @@ import 'package:electronic_shop/constants/strings.dart';
 import 'package:electronic_shop/providers/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -228,6 +229,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             ),
                             child: const Text('انشاء حساب'),
                           ),
+                        TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pushReplacementNamed(auth_screen);
+
+                            },
+                            child: Text(
+                              'تسجيل دخول',
+                              style: TextStyle(color: ThemeProvider.primColor),
+                            ))
                       ],
                     ),
                   ),

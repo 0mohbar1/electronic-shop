@@ -41,19 +41,34 @@ class _UserScreenState extends State<UserScreen> {
     final provider = Provider.of<ThemeProvider>(context);
 
     return Scaffold(
-
+//backgroundColor: provider.isDark?Colors.black54:Colors.white,
       appBar: AppBar(
         actions: [
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: InkWell(
                 onTap: () => provider.toggleTheme(),
-                child: Icon(provider.isDark ? Icons.nightlight : Icons.sunny)),
+                child: Icon(
+                  provider.isDark ? Icons.nightlight : Icons.sunny,
+                  color: Theme.of(context).colorScheme.background,
+                )),
           ),
         ],
         leading: InkWell(
-          child: const Icon(Icons.logout),
+          child: Icon(
+            Icons.logout,
+            color: Theme.of(context).colorScheme.background,
+          ),
           onTap: () {
+            Future<void> clearInfo() async {
+              SharedPreferences prefs = await SharedPreferences.getInstance();
+              await prefs.setString('email', '');
+              await prefs.setString('fullName', '');
+              await prefs.setString('phone', '');
+              await prefs.setString('address', '');
+              await prefs.setString('password', '');
+            }
+
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (_) => BlocProvider(
@@ -66,14 +81,16 @@ class _UserScreenState extends State<UserScreen> {
         ),
         centerTitle: true,
         backgroundColor: ThemeProvider.primColor,
-        title: const Text('معلوماتي',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        title: Text('معلوماتي',
+            style: TextStyle(
+                color: Theme.of(context).colorScheme.background,
+                fontWeight: FontWeight.bold)),
       ),
       body: Center(
         child: Container(
           padding: const EdgeInsets.all(50),
           decoration: BoxDecoration(
-            color: Theme.of(context).primaryColor,
+            color: ThemeProvider.primColor,
             borderRadius: BorderRadius.circular(10),
           ),
           child: Column(
@@ -91,7 +108,7 @@ class _UserScreenState extends State<UserScreen> {
               const SizedBox(height: 20),
               const SizedBox(height: 10),
               Text(
-                "الاسم الكامل :$_fullName",
+                "$_fullName: الاسم الكامل ",
                 style: const TextStyle(
                   fontSize: 18,
                   color: Colors.white,
@@ -99,7 +116,7 @@ class _UserScreenState extends State<UserScreen> {
               ),
               const SizedBox(height: 10),
               Text(
-                "الايميل : $_email",
+                "$_email: الايميل ",
                 style: const TextStyle(
                   fontSize: 18,
                   color: Colors.white,
@@ -107,7 +124,7 @@ class _UserScreenState extends State<UserScreen> {
               ),
               const SizedBox(height: 10),
               Text(
-                "الرقم : $_phone",
+                "$_phone: الرقم ",
                 style: const TextStyle(
                   fontSize: 18,
                   color: Colors.white,
@@ -115,7 +132,7 @@ class _UserScreenState extends State<UserScreen> {
               ),
               const SizedBox(height: 10),
               Text(
-                "رقم الهاتف : $_address",
+                "$_address: العنوان ",
                 style: const TextStyle(
                   fontSize: 18,
                   color: Colors.white,
