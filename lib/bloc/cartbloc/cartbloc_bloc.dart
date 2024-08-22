@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:electronic_shop/data/web_services/shopping_web_services.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
@@ -46,7 +47,8 @@ class CartblocBloc extends Bloc<CartEvent, CartState> {
     });
   }
 
-  void _onBuyOneItem(BuyOneItem event, Emitter<CartState> emit) {
+  void _onBuyOneItem(BuyOneItem event, Emitter<CartState> emit) async {
+    await StoreShoppingWebServices().storeOrder(event.id.toString());
     final List<Item> updatedList = List.from(state.products)
       ..removeWhere((element) => element.product.id == event.id);
 

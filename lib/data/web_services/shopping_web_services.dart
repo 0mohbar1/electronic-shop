@@ -28,4 +28,16 @@ class StoreShoppingWebServices {
       return [];
     }
   }
+  Future<void> storeOrder(String productId) async {
+    await dio.post('http://192.168.92.77/TechShop/public/api/storeOrder',
+        options: Options(headers: {
+          'Authorization':
+          'Bearer 4|Y9ufdrOvvnTdRVv8erYYZk73rsvJVmmlpYX1yQ3hca7aa2c5'
+        }),
+        data: {
+          'address': "Aleppo Forkan",
+          'product_id': productId,
+          'quantity': 1
+        });
+  }
 }
